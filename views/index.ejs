@@ -95,9 +95,16 @@
         #compressionResult a:hover {
             background-color: #145dae;
         }
-
+        .loading {
+            /* Add your preferred styles for the loading container element, e.g., center it on the page */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 </head>
 
 <body>
@@ -108,6 +115,7 @@
             <input type="file" id="myFile" name="filename">
             <input type="submit" value="Compress Image" id="compressButton">
         </form>
+        <div id="loading" class="loading"></div>
     </div>
     <div id="compressionResult" style="display: none;"></div>
     <script>
@@ -115,12 +123,16 @@
             event.preventDefault();
             const form = event.target.closest("form");
             const formData = new FormData(form);
+            const loadingSpinner = new Spinner().spin(document.getElementById("loading"));
 
             try {
                 const response = await fetch(form.action, {
                     method: "POST",
                     body: formData,
                 });
+
+                loadingSpinner.stop();
+                
                 if (response.ok) {
                     const compressedImageBlob = await response.blob();
                     const objectURL = URL.createObjectURL(compressedImageBlob);
