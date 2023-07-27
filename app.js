@@ -1,7 +1,10 @@
 const express = require("express");
 const multer = require("multer");
 const sharp = require("sharp");
+const dotenv = require("dotenv");
 
+
+dotenv.config();
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
@@ -44,6 +47,7 @@ app.post("/compressImage", upload.single('filename'), async (req, res, next) => 
     }
 });
 
-app.listen(3000, () => {
-    console.log("Server up and running!");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server up and running on port ${port}`);
 });
